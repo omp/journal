@@ -41,11 +41,18 @@ static void print_entry(char *entry) {
 	strftime(date, sizeof(date), "%Y/%m/%d", localtime(&time));
 	printf("<div class='entry'><p><span class='date'>%s</span>&emsp;", date);
 
-	for (int p = getc(f), c = getc(f); p != EOF; p = c, c = getc(f)) {
-		if (p != '\n')
-			putchar(p);
-		else if (c != '\n' && c != EOF)
-			printf("</p><p>");
+	for (int c = getc(f), nl = 0; c != EOF; c = getc(f)) {
+		if (c == '\n') {
+			++nl;
+			continue;
+		}
+
+		if (nl > 0) {
+			printf(nl == 1 ? "<br>" : "<p></p>");
+			nl = 0;
+		}
+
+		putchar(c);
 	}
 
 	fclose(f);
