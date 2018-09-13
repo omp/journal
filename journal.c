@@ -10,7 +10,8 @@
 static char *entries[MAX_ENTRIES];
 static int num_entries;
 
-static void load_entries() {
+static void load_entries()
+{
 	DIR *d = opendir(ENTRY_DIR);
 	if (!d) exit(1);
 
@@ -28,7 +29,8 @@ static void load_entries() {
 	closedir(d);
 }
 
-static void print_entry(char *entry) {
+static void print_entry(char *entry)
+{
 	size_t len = strlen(entry) + 1;
 	char *path = malloc(sizeof(ENTRY_DIR) + len);
 	memcpy(path, ENTRY_DIR"/", sizeof(ENTRY_DIR));
@@ -60,11 +62,13 @@ static void print_entry(char *entry) {
 	printf("</p></div>\n");
 }
 
-static int entry_cmp(const void *a, const void *b) {
+static int entry_cmp(const void *a, const void *b)
+{
 	return atoi(*(const char **)b) - atoi(*(const char **)a);
 }
 
-int main() {
+int main()
+{
 	load_entries();
 	qsort(entries, num_entries, sizeof(char *), entry_cmp);
 
@@ -73,12 +77,12 @@ int main() {
 		"<html lang='en'>\n"
 		"<head>\n"
 		"<meta charset='utf-8'>\n"
-		"<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>\n"
+		"<meta name='viewport' content='width=device-width, initial-scale=1'>\n"
+		"<link href='https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700' rel='stylesheet'>\n"
 		"<link href='style.css' rel='stylesheet'>\n"
 		"<title>david's journal</title>\n"
 		"</head>\n"
 		"<body>\n"
-		"<div id='content'>\n"
 		"<h1>david's journal</h1>\n");
 
 	for (int i = 0; i < num_entries; ++i) {
@@ -87,7 +91,6 @@ int main() {
 	}
 
 	printf(
-		"</div>\n"
 		"</body>\n"
 		"</html>\n");
 
