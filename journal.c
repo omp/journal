@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+#define TITLE "david's journal"
 #define ENTRY_DIR "entries"
 #define MAX_ENTRIES 1024
 
@@ -80,10 +81,10 @@ int main()
 		"<meta name='viewport' content='width=device-width, initial-scale=1'>\n"
 		"<link href='https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700' rel='stylesheet'>\n"
 		"<link href='style.css' rel='stylesheet'>\n"
-		"<title>david's journal</title>\n"
+		"<title>"TITLE"</title>\n"
 		"</head>\n"
 		"<body>\n"
-		"<h1>david's journal</h1>\n");
+		"<h1>"TITLE"</h1>\n");
 
 	for (int i = 0; i < num_entries; ++i) {
 		print_entry(entries[i]);
