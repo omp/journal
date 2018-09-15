@@ -79,7 +79,6 @@ int main()
 		"<head>\n"
 		"<meta charset='utf-8'>\n"
 		"<meta name='viewport' content='width=device-width, initial-scale=1'>\n"
-		"<link href='https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700' rel='stylesheet'>\n"
 		"<link href='style.css' rel='stylesheet'>\n"
 		"<title>"TITLE"</title>\n"
 		"</head>\n"
