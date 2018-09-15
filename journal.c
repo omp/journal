@@ -50,7 +50,7 @@ static void print_entry(char *entry)
 		}
 
 		if (nl > 0) {
-			printf(nl == 1 ? "<br>" : "<p></p>");
+			printf(nl == 1 ? "<br>" : "</p><p>");
 			nl = 0;
 		}
 
