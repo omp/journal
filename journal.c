@@ -37,6 +37,7 @@ static void print_entry(char *entry)
 	memcpy(path, ENTRY_DIR"/", sizeof(ENTRY_DIR));
 	memcpy(path + sizeof(ENTRY_DIR), entry, len);
 	FILE *f = fopen(path, "r");
+	free(path);
 	if (!f) return;
 
 	char date[11];
