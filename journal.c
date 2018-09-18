@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,9 +12,9 @@
 static char *entries[MAX_ENTRIES];
 static int num_entries;
 
-static void load_entries()
+static void load_entries(char *dir, size_t *max_fn_size)
 {
-	DIR *d = opendir(ENTRY_DIR);
+	DIR *d = opendir(dir);
 	if (!d) exit(1);
 
 	struct dirent *de;
@@ -21,28 +22,26 @@ static void load_entries()
 		if (de->d_name[0] == '.') continue;
 		if (num_entries == MAX_ENTRIES) exit(1);
 
-		size_t entry_size = strlen(de->d_name) + 1;
-		char *entry = malloc(entry_size);
-		memcpy(entry, de->d_name, entry_size);
+		size_t fn_size = strlen(de->d_name) + 1;
+		if (fn_size > *max_fn_size)
+			*max_fn_size = fn_size;
+		char *entry = malloc(fn_size);
+		memcpy(entry, de->d_name, fn_size);
 		entries[num_entries++] = entry;
 	}
 
 	closedir(d);
 }
 
-static void print_entry(char *entry)
+static void print_entry(char *path, char *ts)
 {
-	size_t len = strlen(entry) + 1;
-	char *path = malloc(sizeof(ENTRY_DIR) + len);
-	memcpy(path, ENTRY_DIR"/", sizeof(ENTRY_DIR));
-	memcpy(path + sizeof(ENTRY_DIR), entry, len);
 	FILE *f = fopen(path, "r");
-	free(path);
 	if (!f) return;
 
+	struct tm tm;
+	strptime(ts, "%s", &tm);
 	char date[11];
-	long time = atol(entry);
-	strftime(date, sizeof(date), "%Y/%m/%d", localtime(&time));
+	strftime(date, sizeof(date), "%Y/%m/%d", &tm);
 	printf("<div class='entry'><p><span class='date'>%s</span>&emsp;", date);
 
 	for (int c = getc(f), nl = 0; c != EOF; c = getc(f)) {
@@ -60,8 +59,7 @@ static void print_entry(char *entry)
 	}
 
 	fclose(f);
-
-	printf("</p></div>\n");
+	puts("</p></div>");
 }
 
 static int entry_cmp(const void *a, const void *b)
@@ -71,10 +69,11 @@ static int entry_cmp(const void *a, const void *b)
 
 int main()
 {
-	load_entries();
+	size_t max_fn_size = 0;
+	load_entries(ENTRY_DIR, &max_fn_size);
 	qsort(entries, num_entries, sizeof(char *), entry_cmp);
 
-	printf(
+	puts(
 		"<!DOCTYPE html>\n"
 		"<html lang='en'>\n"
 		"<head>\n"
@@ -84,16 +83,20 @@ int main()
 		"<title>"TITLE"</title>\n"
 		"</head>\n"
 		"<body>\n"
-		"<h1>"TITLE"</h1>\n");
+		"<h1>"TITLE"</h1>");
 
+	char *path = malloc(sizeof(ENTRY_DIR) + max_fn_size);
+	memcpy(path, ENTRY_DIR"/", sizeof(ENTRY_DIR));
 	for (int i = 0; i < num_entries; ++i) {
-		print_entry(entries[i]);
+		strcpy(path + sizeof(ENTRY_DIR), entries[i]);
+		print_entry(path, entries[i]);
 		free(entries[i]);
 	}
 
-	printf(
+	free(path);
+	puts(
 		"</body>\n"
-		"</html>\n");
+		"</html>");
 
 	return 0;
 }
