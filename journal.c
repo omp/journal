@@ -71,7 +71,7 @@ int main()
 {
 	size_t max_fn_size = 0;
 	load_entries(ENTRY_DIR, &max_fn_size);
-	qsort(entries, num_entries, sizeof(char *), entry_cmp);
+	qsort(entries, num_entries, sizeof(entries[0]), entry_cmp);
 
 	puts(
 		"<!DOCTYPE html>\n"
