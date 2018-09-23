@@ -40,9 +40,9 @@ static void print_entry(char *path, char *ts)
 
 	struct tm tm;
 	strptime(ts, "%s", &tm);
-	char date[11];
-	strftime(date, sizeof(date), "%Y/%m/%d", &tm);
-	printf("<div class='entry'><p><span class='date'>%s</span>&emsp;", date);
+	printf(
+		"<div class='entry'><p><span class='date'>%d/%02d/%02d</span>&emsp;",
+		tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 
 	for (int c = getc(f), nl = 0; c != EOF; c = getc(f)) {
 		if (c == '\n') {
