@@ -5,7 +5,7 @@
 #include <string.h>
 #include <time.h>
 
-#define TITLE "david's journal"
+#define TITLE u8"david’s journal"
 #define ENTRY_DIR "entries"
 #define MAX_ENTRIES 1024
 
